@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% set authed = true %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Stock Agent - Dashboard</h1>
+<p>Trạng thái: <strong>đang chạy</strong></p>
+<ul>
+  <li>Model: {{ model }}</li>
+  <li>Nguồn dữ liệu: {{ market_data_source }}</li>
+  <li>Số holdings: {{ holdings_count }}</li>
+  <li>Số mã trong watchlist: {{ watchlist_count }}</li>
+</ul>
+{% endblock %}

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+anthropic-config/
+*.log
+.pytest_cache/
+.mypy_cache/
+data/

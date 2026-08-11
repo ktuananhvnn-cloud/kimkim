@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Stock Agent Admin{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 16px; color: #1a1a1a; }
+    nav a { margin-right: 16px; text-decoration: none; color: #2563eb; }
+    textarea { width: 100%; min-height: 240px; font-family: monospace; font-size: 14px; }
+    input[type=text], input[type=password], input[type=number] { width: 100%; padding: 6px; box-sizing: border-box; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #e5e5e5; }
+    button { padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .flash { background: #ecfdf5; border: 1px solid #10b981; padding: 8px 12px; border-radius: 4px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  {% if authed %}
+  <nav>
+    <a href="/admin">Dashboard</a>
+    <a href="/admin/prompts">Prompts</a>
+    <a href="/admin/config">Config</a>
+    <a href="/admin/logout">Đăng xuất</a>
+  </nav>
+  <hr>
+  {% endif %}
+  {% block content %}{% endblock %}
+</body>
+</html>

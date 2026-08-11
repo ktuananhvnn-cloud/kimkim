@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% set authed = true %}
+{% block title %}Config{% endblock %}
+{% block content %}
+<h1>Cấu hình</h1>
+{% if saved %}<div class="flash">Đã lưu.</div>{% endif %}
+<form method="post" action="/admin/config">
+  <p>
+    <label>Chu kỳ kiểm tra cảnh báo giá (phút)</label>
+    <input type="number" name="alert_check_interval_minutes" min="1" value="{{ alert_check_interval_minutes }}">
+  </p>
+  <button type="submit">Lưu</button>
+</form>
+<p style="color:#666;font-size:14px">
+  Lưu ý: các key bí mật (Anthropic API key, Telegram token, Supabase key) không được chỉnh sửa ở đây -
+  chúng chỉ nằm trong file .env trên VPS.
+</p>
+{% endblock %}

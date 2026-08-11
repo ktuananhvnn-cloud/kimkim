@@ -1,0 +1,29 @@
+services:
+  agent:
+    build: .
+    container_name: stock-agent
+    restart: unless-stopped
+    env_file:
+      - .env
+    # Bind to localhost only - a reverse proxy already running on the VPS
+    # (or one you add) terminates TLS and forwards to this port.
+    # Change the host port on the left if 8080 is already taken on the VPS.
+    ports:
+      - "127.0.0.1:8080:8080"
+    mem_limit: 512m
+    cpus: 0.5
+    volumes:
+      - agent-data:/app/data
+      # OAuth profile from `ant auth login` (only needed if ANTHROPIC_API_KEY
+      # in .env is empty - i.e. using a Claude Pro/Max subscription instead of
+      # a metered API key). Read-only: the container never needs to write
+      # here. Safe to leave this mount in place even when using an API key.
+      - ./anthropic-config:/anthropic-config:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  agent-data:

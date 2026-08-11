@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% set authed = true %}
+{% block title %}Prompts{% endblock %}
+{% block content %}
+<h1>System Prompt</h1>
+{% if saved %}<div class="flash">Đã lưu phiên bản mới (v{{ current_version }}).</div>{% endif %}
+<form method="post" action="/admin/prompts">
+  <textarea name="content">{{ content }}</textarea>
+  <p><button type="submit">Lưu phiên bản mới</button></p>
+</form>
+
+<h2>Lịch sử phiên bản</h2>
+<table>
+  <tr><th>Version</th><th>Active</th><th>Cập nhật</th></tr>
+  {% for v in versions %}
+  <tr>
+    <td>{{ v.version }}</td>
+    <td>{{ "✓" if v.is_active else "" }}</td>
+    <td>{{ v.updated_at }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
