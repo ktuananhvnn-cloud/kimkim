@@ -50,7 +50,10 @@ def login_submit(request: Request, username: str = Form(...), password: str = Fo
         create_session_cookie(),
         httponly=True,
         samesite="lax",
-        secure=True,
+        # Only require HTTPS for the cookie when actually served over HTTPS
+        # (production, behind the reverse proxy) - a hardcoded True would
+        # make the browser silently drop the cookie during local http:// testing.
+        secure=request.url.scheme == "https",
         max_age=7 * 24 * 3600,
     )
     return response

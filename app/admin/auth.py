@@ -5,26 +5,25 @@ exactly one admin, so a signed cookie is the whole auth system.
 """
 from __future__ import annotations
 
+import bcrypt
 from itsdangerous import BadSignature, SignatureExpired, TimestampSigner
-from passlib.context import CryptContext
 
 from app.config import settings
 
 SESSION_COOKIE_NAME = "admin_session"
 SESSION_MAX_AGE_SECONDS = 7 * 24 * 3600
 
-_pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 _signer = TimestampSigner(settings.admin_session_secret)
 
 
 def hash_password(password: str) -> str:
-    return _pwd_context.hash(password)
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(password: str, password_hash: str) -> bool:
     if not password_hash:
         return False
-    return _pwd_context.verify(password, password_hash)
+    return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("utf-8"))
 
 
 def create_session_cookie() -> str:

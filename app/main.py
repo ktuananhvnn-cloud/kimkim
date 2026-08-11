@@ -54,6 +54,12 @@ def main():
         host="0.0.0.0",
         port=settings.admin_port,
         log_level=settings.log_level.lower(),
+        # The container only listens on 127.0.0.1, reachable solely via the
+        # trusted local reverse proxy (see README) - trust its X-Forwarded-*
+        # headers so request.url.scheme correctly reports "https" in prod,
+        # which is what makes the admin session cookie's Secure flag work.
+        proxy_headers=True,
+        forwarded_allow_ips="*",
     )
 
 

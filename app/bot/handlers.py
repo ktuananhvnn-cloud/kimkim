@@ -33,29 +33,38 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 
+async def _ask_and_reply(update: Update, prompt_text: str) -> None:
+    """Call the agent and reply, surfacing a friendly message on failure
+    instead of leaving the user with no response (e.g. Claude auth not set
+    up yet, VNDirect blocked, Supabase unreachable)."""
+    try:
+        reply = await asyncio.to_thread(agent.ask, update.effective_chat.id, prompt_text)
+    except Exception:
+        logger.exception("agent.ask failed")
+        await update.message.reply_text(
+            "Có lỗi khi xử lý yêu cầu (có thể do chưa cấu hình xong Claude/dữ liệu "
+            "giá). Kiểm tra log server để biết chi tiết."
+        )
+        return
+    await update.message.reply_text(reply)
+
+
 async def portfolio_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not _is_owner(update):
         return
-    reply = await asyncio.to_thread(
-        agent.ask, update.effective_chat.id, "Cho tôi xem danh mục hiện tại."
-    )
-    await update.message.reply_text(reply)
+    await _ask_and_reply(update, "Cho tôi xem danh mục hiện tại.")
 
 
 async def watchlist_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not _is_owner(update):
         return
-    reply = await asyncio.to_thread(
-        agent.ask, update.effective_chat.id, "Cho tôi xem watchlist hiện tại."
-    )
-    await update.message.reply_text(reply)
+    await _ask_and_reply(update, "Cho tôi xem watchlist hiện tại.")
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not _is_owner(update):
         return
-    reply = await asyncio.to_thread(agent.ask, update.effective_chat.id, update.message.text)
-    await update.message.reply_text(reply)
+    await _ask_and_reply(update, update.message.text)
 
 
 async def check_alerts(context: ContextTypes.DEFAULT_TYPE) -> None:
